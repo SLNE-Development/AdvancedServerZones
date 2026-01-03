@@ -1,4 +1,4 @@
-package info.preva1l.advancedserverzones.world;
+package info.preva1l.advancedserverzones.world.state;
 
 import com.google.gson.annotations.Expose;
 import org.bukkit.Bukkit;

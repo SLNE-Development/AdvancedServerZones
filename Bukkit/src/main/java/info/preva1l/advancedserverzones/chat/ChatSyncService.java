@@ -26,7 +26,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public final class ChatSyncService implements Listener {
     public static final ChatSyncService instance = new ChatSyncService();
 
-    private Chat chat;
+    private Object chat;
 
     @Configure
     public void configure() {
@@ -37,13 +37,13 @@ public final class ChatSyncService implements Listener {
     }
 
     private String getPrefix(Player player) {
-        if (chat != null) return chat.getPlayerPrefix(player);
+        if (chat != null) return ((Chat) chat).getPlayerPrefix(player);
 
         return "";
     }
 
     private String getSuffix(Player player) {
-        if (chat != null) return chat.getPlayerSuffix(player);
+        if (chat != null) return ((Chat) chat).getPlayerSuffix(player);
 
         return "";
     }

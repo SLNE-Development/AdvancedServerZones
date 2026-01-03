@@ -6,10 +6,11 @@ import info.preva1l.advancedserverzones.AdvancedServerZones;
 import info.preva1l.advancedserverzones.borders.transfer.TransferService;
 import info.preva1l.advancedserverzones.config.Config;
 import info.preva1l.advancedserverzones.config.Servers;
-import info.preva1l.advancedserverzones.world.WorldState;
+import info.preva1l.advancedserverzones.world.state.WorldState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class Broker {
@@ -25,8 +26,19 @@ public abstract class Broker {
                 if (!transferData.targetServer().equals(Servers.i().getCurrent())) return;
 
                 TransferService.instance.addData(transferData);
+                Message.builder()
+                        .type(Message.Type.TRANSFER_READY)
+                        .payload(Payload.withUUID(transferData.player()))
+                        .build()
+                        .send(instance);
             }, () -> {
                 throw new IllegalStateException("transfer packet received with no transfer data");
+            });
+
+            case TRANSFER_READY -> message.getPayload().getUUID().ifPresent(playerUUID -> {
+                Runnable finalizer = TransferService.instance.transferFinalizers.remove(playerUUID);
+                if (finalizer == null) return;
+                Bukkit.getScheduler().runTask(AdvancedServerZones.instance, finalizer);
             });
 
             case WORLD_STATE -> message.getPayload().getWorldState().ifPresent(WorldState::apply);

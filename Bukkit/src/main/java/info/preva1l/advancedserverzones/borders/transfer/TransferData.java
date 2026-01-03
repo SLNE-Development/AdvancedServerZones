@@ -10,12 +10,13 @@ import java.util.UUID;
 
 public record TransferData(
         @Expose UUID player,
+        @Expose int entityId,
         @Expose String targetServer,
         @Expose TransferData.Position position,
         @Expose int lastPing
 ) {
     public byte[] getNonce() {
-        return (player.toString() + targetServer + lastPing).getBytes(StandardCharsets.UTF_8);
+        return (player.toString() + entityId + targetServer + lastPing).getBytes(StandardCharsets.UTF_8);
     }
 
     public record Direction(

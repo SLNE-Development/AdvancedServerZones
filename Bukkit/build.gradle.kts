@@ -8,6 +8,7 @@ import info.preva1l.trashcan.description.paper.PaperDependencyDefinition.Relativ
 
 plugins {
     asz.common
+    id("io.papermc.paperweight.userdev")
 }
 
 trashcan {
@@ -18,14 +19,13 @@ repositories {
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
     maven(url = "https://oss.sonatype.org/content/groups/public/")
     maven(url = "https://jitpack.io")
-    maven(url = "https://repo.codemc.io/repository/maven-snapshots/")
+    maven(url = "https://repo.codemc.io/repository/maven-releases/")
     maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven(url = "https://mvn-repo.arim.space/lesser-gpl3/")
-    maven(url = "https://repo.rosewooddev.io/repository/public/")
-    maven(url = "https://nexus.neetgames.com/repository/maven-releases/")
 }
 
 dependencies {
+    paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
     implementation(project(":API"))
     trashcan()
 

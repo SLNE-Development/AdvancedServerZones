@@ -21,14 +21,8 @@ public final class Message {
 
     public enum Type {
         TRANSFER,
+        TRANSFER_READY,
         CHAT_MESSAGE,
         WORLD_STATE,
-
-        ZONE_HEARTBEAT,
-        ZONE_STOP,
-
-        LEADER_ELECTION_START,
-        LEADER_ELECTION_VOTE,
-        LEADER_ELECTION_CHOSEN,
     }
 }

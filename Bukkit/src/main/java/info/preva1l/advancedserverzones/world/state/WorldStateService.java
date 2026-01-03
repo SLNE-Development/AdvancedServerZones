@@ -1,10 +1,9 @@
-package info.preva1l.advancedserverzones.world;
+package info.preva1l.advancedserverzones.world.state;
 
 import info.preva1l.advancedserverzones.AdvancedServerZones;
 import info.preva1l.advancedserverzones.network.Broker;
 import info.preva1l.advancedserverzones.network.Message;
 import info.preva1l.advancedserverzones.network.Payload;
-import info.preva1l.trashcan.flavor.annotations.Configure;
 import info.preva1l.trashcan.flavor.annotations.Service;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,7 +19,9 @@ import java.util.logging.Level;
  */
 @Service
 public final class WorldStateService {
-    @Configure
+    public static final WorldStateService instance = new WorldStateService();
+
+    //@Configure
     public void configure() {
         Thread.ofPlatform()
                 .name("ASZ World State Updater")

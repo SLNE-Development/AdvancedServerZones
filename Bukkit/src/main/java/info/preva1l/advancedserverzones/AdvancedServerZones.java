@@ -8,6 +8,7 @@ import info.preva1l.hooker.HookerOptions;
 import info.preva1l.trashcan.extension.BasePlugin;
 import info.preva1l.trashcan.extension.annotations.PluginEnable;
 import info.preva1l.trashcan.extension.annotations.PluginLoad;
+import org.bukkit.Bukkit;
 
 public final class AdvancedServerZones extends BasePlugin {
     public static AdvancedServerZones instance;
@@ -18,7 +19,17 @@ public final class AdvancedServerZones extends BasePlugin {
 
     @PluginLoad
     public void load() {
-        Hooker.register(this.getClass(), new HookerOptions("info.preva1l.advancedserverzones.hooks"));
+        Hooker.register(
+                this.getClass(),
+                new HookerOptions(
+                        getLogger(),
+                        false,
+                        task -> Bukkit.getAsyncScheduler().runNow(this, t -> task.run()),
+                        task ->  Bukkit.getScheduler().runTask(this, task),
+                        task ->  Bukkit.getScheduler().runTaskLater(this, task, 10),
+                        "info.preva1l.advancedserverzones.hooks"
+                )
+        );
     }
 
     @PluginEnable

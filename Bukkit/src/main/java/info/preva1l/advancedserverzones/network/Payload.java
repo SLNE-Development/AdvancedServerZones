@@ -3,7 +3,7 @@ package info.preva1l.advancedserverzones.network;
 import com.google.gson.annotations.Expose;
 import info.preva1l.advancedserverzones.chat.ChatMessage;
 import info.preva1l.advancedserverzones.borders.transfer.TransferData;
-import info.preva1l.advancedserverzones.world.WorldState;
+import info.preva1l.advancedserverzones.world.state.WorldState;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +23,10 @@ public final class Payload {
     @Nullable
     @Expose
     private TransferData transferData;
+
+    @Nullable
+    @Expose
+    private UUID uuid;
 
     /**
      * Returns an empty cross-server message payload.
@@ -68,6 +72,13 @@ public final class Payload {
         return payload;
     }
 
+    @NotNull
+    public static Payload withUUID(@NotNull UUID uuid) {
+        final Payload payload = new Payload();
+        payload.uuid = uuid;
+        return payload;
+    }
+
     public Optional<WorldState> getWorldState() {
         return Optional.ofNullable(worldState);
     }
@@ -78,5 +89,9 @@ public final class Payload {
 
     public Optional<TransferData> getTransferData() {
         return Optional.ofNullable(transferData);
+    }
+
+    public Optional<UUID> getUUID() {
+        return Optional.ofNullable(uuid);
     }
 }

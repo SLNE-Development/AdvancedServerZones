@@ -114,6 +114,7 @@ public final class BorderService implements Listener {
                         p,
                         new TransferData(
                                 p.getUniqueId(),
+                                p.getEntityId(),
                                 Servers.i().getNorth(),
                                 TransferData.Position.from(p.getLocation()),
                                 p.getPing()
@@ -135,6 +136,7 @@ public final class BorderService implements Listener {
                         p,
                         new TransferData(
                                 p.getUniqueId(),
+                                p.getEntityId(),
                                 Servers.i().getSouth(),
                                 TransferData.Position.from(p.getLocation()),
                                 p.getPing()
@@ -156,6 +158,7 @@ public final class BorderService implements Listener {
                         p,
                         new TransferData(
                                 p.getUniqueId(),
+                                p.getEntityId(),
                                 Servers.i().getEast(),
                                 TransferData.Position.from(p.getLocation()),
                                 p.getPing()
@@ -177,6 +180,7 @@ public final class BorderService implements Listener {
                         p,
                         new TransferData(
                                 p.getUniqueId(),
+                                p.getEntityId(),
                                 Servers.i().getWest(),
                                 TransferData.Position.from(p.getLocation()),
                                 p.getPing()
