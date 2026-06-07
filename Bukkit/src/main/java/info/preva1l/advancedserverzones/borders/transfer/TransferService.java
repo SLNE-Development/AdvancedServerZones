@@ -10,6 +10,8 @@ import info.preva1l.advancedserverzones.network.Message;
 import info.preva1l.advancedserverzones.network.Payload;
 import info.preva1l.trashcan.flavor.annotations.Configure;
 import info.preva1l.trashcan.flavor.annotations.Service;
+import io.papermc.paper.event.player.AsyncPlayerSpawnLocationEvent;
+import lombok.val;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
@@ -17,7 +19,9 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.time.Duration;
@@ -87,8 +91,9 @@ public final class TransferService implements Listener {
                 .send(Broker.instance);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @EventHandler
-    public void playJoinEvent(PlayerSpawnLocationEvent e) {
+    public void playJoinEvent(AsyncPlayerSpawnLocationEvent e) {
         //<editor-fold desc="seamless transfers to be reworked">
 //        CraftPlayer player = (CraftPlayer) e.getPlayer();
 //        ServerPlayer p = player.getHandle();
@@ -97,10 +102,19 @@ public final class TransferService implements Listener {
 //        e.getPlayer().showPlayer(AdvancedServerZones.i(), e.getPlayer());
         //</editor-fold>
 
-        TransferData data = cache.asMap().remove(e.getPlayer().getUniqueId());
+
+        val uuid = e.getConnection().getProfile().getId();
+        if (uuid == null) return;
+        TransferData data = cache.getIfPresent(uuid);
         if (data == null) return;
 
         e.setSpawnLocation(data.position().predictedLocation(data.lastPing()));
-        ((CraftPlayer) e.getPlayer()).getHandle().setId(data.entityId());
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        val data = cache.asMap().remove(event.getPlayer().getUniqueId());
+        if (data == null) return;
+        ((CraftPlayer) event.getPlayer()).getHandle().setId(data.entityId());
     }
 }
