@@ -71,13 +71,15 @@ public final class TransferService implements Listener {
             if (!player.isOnline()) return;
 
             int dist = player.getClientViewDistance();
-            player.getNearbyEntities(dist, dist, dist)
-                    .forEach(entity ->
-                            ((CraftEntity) entity)
-                                    .getHandle()
-                                    .moonrise$getTrackedEntity()
-                                    .serverEntity
-                                    .removePairing(((CraftPlayer) player).getHandle()));
+            ServerPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
+
+            player.getNearbyEntities(dist, dist, dist).forEach(entity -> {
+                try {
+                    var trackedEntity = ((CraftEntity) entity).getHandle().moonrise$getTrackedEntity();
+                    trackedEntity.serverEntity.removePairing(nmsPlayer);
+                } catch (Throwable ignored) {
+                }
+            });
 
             ByteArrayDataOutput output = ByteStreams.newDataOutput();
             output.writeUTF("Connect");
