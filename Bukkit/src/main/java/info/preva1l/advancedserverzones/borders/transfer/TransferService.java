@@ -93,9 +93,8 @@ public final class TransferService implements Listener {
                 .send(Broker.instance);
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @EventHandler
-    public void playJoinEvent(AsyncPlayerSpawnLocationEvent e) {
+    public void playJoinEvent(PlayerSpawnLocationEvent e) {
         //<editor-fold desc="seamless transfers to be reworked">
 //        CraftPlayer player = (CraftPlayer) e.getPlayer();
 //        ServerPlayer p = player.getHandle();
@@ -104,19 +103,10 @@ public final class TransferService implements Listener {
 //        e.getPlayer().showPlayer(AdvancedServerZones.i(), e.getPlayer());
         //</editor-fold>
 
-
-        val uuid = e.getConnection().getProfile().getId();
-        if (uuid == null) return;
-        TransferData data = cache.getIfPresent(uuid);
+        TransferData data = cache.asMap().remove(e.getPlayer().getUniqueId());
         if (data == null) return;
 
         e.setSpawnLocation(data.position().predictedLocation(data.lastPing()));
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        val data = cache.asMap().remove(event.getPlayer().getUniqueId());
-        if (data == null) return;
-        ((CraftPlayer) event.getPlayer()).getHandle().setId(data.entityId());
+        ((CraftPlayer) e.getPlayer()).getHandle().setId(data.entityId());
     }
 }
