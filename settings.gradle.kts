@@ -4,6 +4,6 @@ include("Bukkit", "API")
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://repo.preva1l.info/releases/")
+        maven("https://reposilite.slne.dev/public")
     }
 }

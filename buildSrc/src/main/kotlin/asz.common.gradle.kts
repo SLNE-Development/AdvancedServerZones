@@ -1,6 +1,13 @@
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.annotationProcessor
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.compileOnly
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.main
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.sourceSets
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.testAnnotationProcessor
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.testCompileOnly
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.testImplementation
+import gradle.kotlin.dsl.accessors._cc74bba6df91495c780495629742604f.testRuntimeOnly
 import info.preva1l.advancedserverzones.BuildConstants
 import info.preva1l.trashcan.finallyADecent
-import info.preva1l.trashcan.paper
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 plugins {
@@ -11,13 +18,12 @@ plugins {
 }
 
 repositories {
+    maven("https://reposilite.slne.dev/public")
     finallyADecent(dev = BuildConstants.DEV_MODE)
     finallyADecent()
 }
 
 dependencies {
-    paper("1.21.8-R0.1-SNAPSHOT")
-
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
@@ -49,7 +55,7 @@ tasks {
         options.compilerArgs.add("-parameters")
         options.isFork = true
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 25
     }
 
     register<Jar>("sourcesJar") {

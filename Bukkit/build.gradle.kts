@@ -8,7 +8,7 @@ import info.preva1l.trashcan.description.paper.PaperDependencyDefinition.Relativ
 
 plugins {
     asz.common
-    id("io.papermc.paperweight.userdev")
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
 }
 
 trashcan {
