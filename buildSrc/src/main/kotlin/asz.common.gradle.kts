@@ -19,8 +19,8 @@ plugins {
 
 repositories {
     maven("https://reposilite.slne.dev/public")
-    finallyADecent(dev = BuildConstants.DEV_MODE)
-    finallyADecent()
+//    finallyADecent(dev = BuildConstants.DEV_MODE)
+//    finallyADecent()
 }
 
 dependencies {

@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    paper("1.21.8-R0.1-SNAPSHOT")
+    paper("26.1.2.build.+")
 }
 
 tasks.register("publishApi") {

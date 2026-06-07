@@ -16,6 +16,7 @@ trashcan {
 }
 
 repositories {
+    maven("https://reposilite.slne.dev/public")
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
     maven(url = "https://oss.sonatype.org/content/groups/public/")
     maven(url = "https://jitpack.io")
@@ -25,9 +26,9 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("26.1.2.build.+")
     implementation(project(":API"))
-    trashcan()
+    trashcan(version = "1.2.4")
 
     library(libs.redisson)
     library(libs.adventure.gson)
