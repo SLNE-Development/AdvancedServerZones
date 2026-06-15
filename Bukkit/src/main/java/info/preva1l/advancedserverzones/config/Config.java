@@ -73,8 +73,30 @@ public final class Config {
         })
         private Grid grid = new Grid();
 
-        @Comment("RGB Color of the particles")
+        @Comment({
+                "Particle color for borders that connect to another server.",
+                "",
+                "This is used for every border direction where a neighbour server",
+                "is configured in server.yml.",
+                "",
+                "Example:",
+                "  north: civilisation-north",
+                "means the north border uses this color."
+        })
         private List<Integer> color = List.of(184, 50, 172);
+
+        @Comment({
+                "Particle color for borders that do not connect to another server.",
+                "",
+                "This is used for every border direction where the neighbour server",
+                "in server.yml is empty.",
+                "",
+                "Example:",
+                "  east: ''",
+                "  west: ''",
+                "means the east and west borders use this edge color."
+        })
+        private List<Integer> edgeColor = List.of(255, 60, 60);
 
         private Rainbow rainbow = new Rainbow();
 

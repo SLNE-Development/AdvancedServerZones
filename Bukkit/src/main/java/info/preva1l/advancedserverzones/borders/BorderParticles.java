@@ -2,12 +2,14 @@ package info.preva1l.advancedserverzones.borders;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import info.preva1l.advancedserverzones.config.Config;
+import info.preva1l.advancedserverzones.config.Servers;
 import info.preva1l.advancedserverzones.util.Cuboid;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class BorderParticles {
@@ -19,7 +21,7 @@ public final class BorderParticles {
 
             for (int[] point : visible.getAllPoints()) {
                 new ParticleBuilder(Objects.requireNonNull(Registry.PARTICLE_TYPE.get(NamespacedKey.minecraft("dust"))))
-                        .color(getColor(point), 2)
+                        .color(getColor(direction, point), 2)
                         .location(new Location(p.getWorld(), point[0], point[1], point[2]))
                         .receivers(p)
                         .spawn();
@@ -27,8 +29,7 @@ public final class BorderParticles {
         }
     }
 
-    private static @NonNull Color getColor(int[] point) {
-        Color color;
+    private static @NonNull Color getColor(BorderDirection direction, int[] point) {
         if (Config.i().getBorder().getRainbow().isEnabled()) {
             float hue = Math.abs(point[1]) / 100f;
             hue -= (float) Math.floor(hue);
@@ -36,13 +37,22 @@ public final class BorderParticles {
             int r = (rgb >>> 16) & 0xFF;
             int g = (rgb >>> 8) & 0xFF;
             int b = rgb & 0xFF;
-            color = Color.fromRGB(r, g, b);
-        } else {
-            color = Color.fromRGB(Config.i().getBorder().getColor().getFirst(),
-                    Config.i().getBorder().getColor().get(1),
-                    Config.i().getBorder().getColor().getLast());
+            return Color.fromRGB(r, g, b);
         }
-        return color;
+
+        List<Integer> configuredColor = direction.isConnected()
+                ? Config.i().getBorder().getColor()
+                : Config.i().getBorder().getEdgeColor();
+
+        return Color.fromRGB(
+                configuredColor.getFirst(),
+                configuredColor.get(1),
+                configuredColor.getLast()
+        );
+    }
+
+    private static boolean hasServer(String server) {
+        return server != null && !server.isBlank();
     }
 
     private enum BorderDirection {
@@ -116,5 +126,14 @@ public final class BorderParticles {
         };
 
         public abstract Cuboid getVisibleBorder(Vector from);
+
+        public boolean isConnected() {
+            return switch (this) {
+                case NORTH -> hasServer(Servers.i().getNorth());
+                case SOUTH -> hasServer(Servers.i().getSouth());
+                case EAST -> hasServer(Servers.i().getEast());
+                case WEST -> hasServer(Servers.i().getWest());
+            };
+        }
     }
 }
