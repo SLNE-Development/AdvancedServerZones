@@ -10,18 +10,13 @@ import info.preva1l.advancedserverzones.network.Message;
 import info.preva1l.advancedserverzones.network.Payload;
 import info.preva1l.trashcan.flavor.annotations.Configure;
 import info.preva1l.trashcan.flavor.annotations.Service;
-import io.papermc.paper.event.player.AsyncPlayerSpawnLocationEvent;
-import lombok.val;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.time.Duration;

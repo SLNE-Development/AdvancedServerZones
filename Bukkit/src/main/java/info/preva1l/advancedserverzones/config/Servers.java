@@ -2,6 +2,7 @@ package info.preva1l.advancedserverzones.config;
 
 import de.exlll.configlib.*;
 import info.preva1l.advancedserverzones.AdvancedServerZones;
+import info.preva1l.advancedserverzones.borders.BorderBoundsProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,47 @@ public final class Servers {
     private String east = "survival-spawn-01";
     private String west = "";
 
+    @Comment({
+            "Grid position of this server.",
+            "",
+            "Only used when:",
+            "  border.grid.enabled: true",
+            "",
+            "The grid position defines which column and row this server belongs to.",
+            "",
+            "Directions follow Minecraft's coordinate system:",
+            "  north = -Z, south = +Z, east = +X, west = -X",
+            "",
+            "Column (X axis):",
+            "  0  = center column",
+            "  1  = one column east of center  (+X)",
+            "  -1 = one column west of center  (-X)",
+            "",
+            "Row (Z axis):",
+            "  0  = center row",
+            "  1  = one row south of center  (+Z)",
+            "  -1 = one row north of center  (-Z)",
+            "",
+            "Tip: the north/south/east/west fields above are the servers a player is",
+            "sent to when they cross that edge, so point them at the neighbours in",
+            "those directions (e.g. the server at row -1 is your 'north').",
+            "",
+            "Example:",
+            "  column: 0",
+            "  row: 0",
+            "means this server is the center server."
+    })
+    private Grid grid = new Grid();
+
     private Border border = new Border();
+
+    @Getter
+    @Configuration
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Grid {
+        private int column = 0;
+        private int row = 0;
+    }
 
     @Configuration
     public static class Border {
@@ -67,6 +108,7 @@ public final class Servers {
 
     public static void reload() {
         instance = YamlConfigurations.load(new File(AdvancedServerZones.instance.getDataFolder(), "server.yml").toPath(), Servers.class, PROPERTIES);
+        BorderBoundsProvider.invalidate();
         AdvancedServerZones.instance.getLogger().info("Servers configuration automatically reloaded from disk.");
     }
 

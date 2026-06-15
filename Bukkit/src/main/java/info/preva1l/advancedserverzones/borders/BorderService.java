@@ -4,7 +4,6 @@ import info.preva1l.advancedserverzones.AdvancedServerZones;
 import info.preva1l.advancedserverzones.AdvancedServerZonesAPI;
 import info.preva1l.advancedserverzones.borders.transfer.TransferData;
 import info.preva1l.advancedserverzones.borders.transfer.TransferService;
-import info.preva1l.advancedserverzones.config.Config;
 import info.preva1l.advancedserverzones.config.Lang;
 import info.preva1l.advancedserverzones.config.Servers;
 import info.preva1l.advancedserverzones.util.Text;
@@ -39,13 +38,11 @@ public final class BorderService implements Listener {
                 .start(() -> {
                     while (AdvancedServerZones.instance.isEnabled()) {
                         try {
-                            int size = Config.i().getBorder().getSize();
-                            double centerX = Servers.i().getBorder().getCenterX();
-                            double centerZ = Servers.i().getBorder().getCenterZ();
-                            double north = centerZ - size;
-                            double south = centerZ + size;
-                            double east = centerX + size;
-                            double west = centerX - size;
+                            BorderBounds bounds = BorderBoundsProvider.get();
+                            double north = bounds.minZ();
+                            double south = bounds.maxZ();
+                            double east = bounds.maxX();
+                            double west = bounds.minX();
 
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 BorderParticles.sendBorderParticles(p);
@@ -125,7 +122,7 @@ public final class BorderService implements Listener {
             @Override
             public void worldBorder(Player p) {
                 Location loc = p.getLocation();
-                loc.setZ((Servers.i().getBorder().getCenterZ() - Config.i().getBorder().getSize()) + 2);
+                loc.setZ(BorderBoundsProvider.get().minZ() + 2);
                 handleBorder(p, loc);
             }
         },
@@ -147,7 +144,7 @@ public final class BorderService implements Listener {
             @Override
             public void worldBorder(Player p) {
                 Location loc = p.getLocation();
-                loc.setZ((Servers.i().getBorder().getCenterZ() + Config.i().getBorder().getSize()) - 2);
+                loc.setZ(BorderBoundsProvider.get().maxZ() - 2);
                 handleBorder(p, loc);
             }
         },
@@ -169,7 +166,7 @@ public final class BorderService implements Listener {
             @Override
             public void worldBorder(Player p) {
                 Location loc = p.getLocation();
-                loc.setX((Servers.i().getBorder().getCenterX() + Config.i().getBorder().getSize()) - 2);
+                loc.setX(BorderBoundsProvider.get().maxX() - 2);
                 handleBorder(p, loc);
             }
         },
@@ -191,7 +188,7 @@ public final class BorderService implements Listener {
             @Override
             public void worldBorder(Player p) {
                 Location loc = p.getLocation();
-                loc.setX((Servers.i().getBorder().getCenterX() - Config.i().getBorder().getSize()) + 2);
+                loc.setX(BorderBoundsProvider.get().minX() + 2);
                 handleBorder(p, loc);
             }
         };

@@ -1,9 +1,10 @@
 package info.preva1l.advancedserverzones.api;
 
 import info.preva1l.advancedserverzones.AdvancedServerZonesAPI;
+import info.preva1l.advancedserverzones.borders.BorderBounds;
+import info.preva1l.advancedserverzones.borders.BorderBoundsProvider;
 import info.preva1l.advancedserverzones.chat.ChatSyncService;
 import info.preva1l.advancedserverzones.config.Config;
-import info.preva1l.advancedserverzones.config.Servers;
 import info.preva1l.advancedserverzones.network.Broker;
 import info.preva1l.advancedserverzones.network.Message;
 import info.preva1l.advancedserverzones.network.Payload;
@@ -17,23 +18,21 @@ import java.util.UUID;
 public final class ImplAdvancedServerZonesAPI extends AdvancedServerZonesAPI {
     @Override
     public boolean isChunkNearBorder(Chunk chunk) {
-        int size = Config.i().getBorder().getSize();
         int interactionRadius = Config.i().getBorder().getInteractionRadius() + 1;
-        int centerZ = Servers.i().getBorder().flooredCenterZ();
-        int centerX = Servers.i().getBorder().flooredCenterX();
+        BorderBounds bounds = BorderBoundsProvider.get();
         int chunkWorldX = chunk.getX() >> 4;
         int chunkWorldZ = chunk.getZ() >> 4;
 
         for (int x = 0; x < 16; x++) {
             int worldX = chunkWorldX + x;
-            if (Math.abs(centerX + size - worldX) < interactionRadius) return true;
-            if (Math.abs(centerX - size - worldX) < interactionRadius) return true;
+            if (Math.abs(bounds.flooredMaxX() - worldX) < interactionRadius) return true;
+            if (Math.abs(bounds.flooredMinX() - worldX) < interactionRadius) return true;
         }
 
         for (int z = 0; z < 16; z++) {
             int worldZ = chunkWorldZ + z;
-            if (Math.abs(centerZ - size - worldZ) < interactionRadius) return true;
-            if (Math.abs(centerZ + size - worldZ) < interactionRadius) return true;
+            if (Math.abs(bounds.flooredMinZ() - worldZ) < interactionRadius) return true;
+            if (Math.abs(bounds.flooredMaxZ() - worldZ) < interactionRadius) return true;
         }
 
         return false;
@@ -48,15 +47,13 @@ public final class ImplAdvancedServerZonesAPI extends AdvancedServerZonesAPI {
     public boolean isLocationNearBorder(Location loc) {
         int locZ = loc.getBlockZ();
         int locX = loc.getBlockX();
-        int size = Config.i().getBorder().getSize();
         int interactionRadius = Config.i().getBorder().getInteractionRadius() + 1;
-        int centerZ = Servers.i().getBorder().flooredCenterZ();
-        int centerX = Servers.i().getBorder().flooredCenterX();
+        BorderBounds bounds = BorderBoundsProvider.get();
 
-        if (Math.abs(centerZ - size - locZ) < interactionRadius) return true;
-        if (Math.abs(centerZ + size - locZ) < interactionRadius) return true;
-        if (Math.abs(centerX + size - locX) < interactionRadius) return true;
-        return Math.abs(centerX - size - locX) < interactionRadius;
+        if (Math.abs(bounds.flooredMinZ() - locZ) < interactionRadius) return true;
+        if (Math.abs(bounds.flooredMaxZ() - locZ) < interactionRadius) return true;
+        if (Math.abs(bounds.flooredMaxX() - locX) < interactionRadius) return true;
+        return Math.abs(bounds.flooredMinX() - locX) < interactionRadius;
     }
 
     @Override

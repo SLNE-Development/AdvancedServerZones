@@ -2,7 +2,6 @@ package info.preva1l.advancedserverzones.borders;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import info.preva1l.advancedserverzones.config.Config;
-import info.preva1l.advancedserverzones.config.Servers;
 import info.preva1l.advancedserverzones.util.Cuboid;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -50,68 +49,68 @@ public final class BorderParticles {
         NORTH {
             @Override
             public Cuboid getVisibleBorder(Vector from) {
-                int size = Config.i().getBorder().getSize();
-                if (Math.abs(Servers.i().getBorder().flooredCenterZ() - size - from.getBlockZ()) > 16)
+                BorderBounds bounds = BorderBoundsProvider.get();
+                if (Math.abs(bounds.flooredMinZ() - from.getBlockZ()) > 16)
                     return null;
 
                 return new Cuboid(
-                        Math.max(from.getBlockX() - 10, Servers.i().getBorder().flooredCenterX() - size),
+                        Math.max(from.getBlockX() - 10, bounds.flooredMinX()),
                         from.getBlockY() - 1,
-                        Servers.i().getBorder().flooredCenterZ() - size,
-                        Math.min(from.getBlockX() + 10, Servers.i().getBorder().flooredCenterX() + size),
+                        bounds.flooredMinZ(),
+                        Math.min(from.getBlockX() + 10, bounds.flooredMaxX()),
                         from.getBlockY() + 5,
-                        Servers.i().getBorder().flooredCenterZ() - size
+                        bounds.flooredMinZ()
                 );
             }
         },
         EAST {
             @Override
             public Cuboid getVisibleBorder(Vector from) {
-                int size = Config.i().getBorder().getSize();
-                if (Math.abs(Servers.i().getBorder().flooredCenterX() + size - from.getBlockX()) > 16)
+                BorderBounds bounds = BorderBoundsProvider.get();
+                if (Math.abs(bounds.flooredMaxX() - from.getBlockX()) > 16)
                     return null;
 
                 return new Cuboid(
-                         Servers.i().getBorder().flooredCenterX() + size,
+                        bounds.flooredMaxX(),
                         from.getBlockY() - 1,
-                        Math.max(from.getBlockZ() - 10, Servers.i().getBorder().flooredCenterZ() - size),
-                        Servers.i().getBorder().flooredCenterX() + size,
+                        Math.max(from.getBlockZ() - 10, bounds.flooredMinZ()),
+                        bounds.flooredMaxX(),
                         from.getBlockY() + 5,
-                        Math.min(from.getBlockZ() + 10, Servers.i().getBorder().flooredCenterZ() + size)
+                        Math.min(from.getBlockZ() + 10, bounds.flooredMaxZ())
                 );
             }
         },
         SOUTH {
             @Override
             public Cuboid getVisibleBorder(Vector from) {
-                int size = Config.i().getBorder().getSize();
-                if (Math.abs(Servers.i().getBorder().flooredCenterZ() + size - from.getBlockZ()) > 16)
+                BorderBounds bounds = BorderBoundsProvider.get();
+                if (Math.abs(bounds.flooredMaxZ() - from.getBlockZ()) > 16)
                     return null;
 
                 return new Cuboid(
-                        Math.max(from.getBlockX() - 10, Servers.i().getBorder().flooredCenterX() - size),
+                        Math.max(from.getBlockX() - 10, bounds.flooredMinX()),
                         from.getBlockY() - 1,
-                        Servers.i().getBorder().flooredCenterZ() + size,
-                        Math.min(from.getBlockX() + 10, Servers.i().getBorder().flooredCenterX() + size),
+                        bounds.flooredMaxZ(),
+                        Math.min(from.getBlockX() + 10, bounds.flooredMaxX()),
                         from.getBlockY() + 5,
-                        Servers.i().getBorder().flooredCenterZ() + size
+                        bounds.flooredMaxZ()
                 );
             }
         },
         WEST {
             @Override
             public Cuboid getVisibleBorder(Vector from) {
-                int size = Config.i().getBorder().getSize();
-                if (Math.abs(Servers.i().getBorder().flooredCenterX() - size - from.getBlockX()) > 16)
+                BorderBounds bounds = BorderBoundsProvider.get();
+                if (Math.abs(bounds.flooredMinX() - from.getBlockX()) > 16)
                     return null;
 
                 return new Cuboid(
-                        Servers.i().getBorder().flooredCenterX() - size,
+                        bounds.flooredMinX(),
                         from.getBlockY() - 1,
-                        Math.max(from.getBlockZ() - 10, Servers.i().getBorder().flooredCenterZ() - size),
-                        Servers.i().getBorder().flooredCenterX() - size,
+                        Math.max(from.getBlockZ() - 10, bounds.flooredMinZ()),
+                        bounds.flooredMinX(),
                         from.getBlockY() + 5,
-                        Math.min(from.getBlockZ() + 10, Servers.i().getBorder().flooredCenterZ() + size)
+                        Math.min(from.getBlockZ() + 10, bounds.flooredMaxZ())
                 );
             }
         };
