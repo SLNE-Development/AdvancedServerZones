@@ -65,16 +65,8 @@ public final class TransferService implements Listener {
         transferFinalizers.put(data.player(), () -> {
             if (!player.isOnline()) return;
 
-            int dist = player.getClientViewDistance();
-            ServerPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
-
-            player.getNearbyEntities(dist, dist, dist).forEach(entity -> {
-                try {
-                    var trackedEntity = ((CraftEntity) entity).getHandle().moonrise$getTrackedEntity();
-                    trackedEntity.serverEntity.removePairing(nmsPlayer);
-                } catch (Throwable ignored) {
-                }
-            });
+            cleanupEntitiesForTransferringPlayer(player);
+            removeTransferredPlayerFromViewers(player);
 
             ByteArrayDataOutput output = ByteStreams.newDataOutput();
             output.writeUTF("Connect");
@@ -86,6 +78,36 @@ public final class TransferService implements Listener {
                 .payload(Payload.withTransferData(data))
                 .build()
                 .send(Broker.instance);
+    }
+
+    private void cleanupEntitiesForTransferringPlayer(Player player) {
+        int dist = player.getClientViewDistance();
+        ServerPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
+
+        player.getNearbyEntities(dist, dist, dist).forEach(entity -> {
+            try {
+                var trackedEntity = ((CraftEntity) entity).getHandle().moonrise$getTrackedEntity();
+                if (trackedEntity == null) return;
+                trackedEntity.serverEntity.removePairing(nmsPlayer);
+            } catch (Throwable ignored) {
+            }
+        });
+    }
+
+    private void removeTransferredPlayerFromViewers(Player player) {
+        ServerPlayer transferredNms = ((CraftPlayer) player).getHandle();
+        var trackedTransferredEntity = transferredNms.moonrise$getTrackedEntity();
+        if (trackedTransferredEntity == null) return;
+
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            if (viewer.getUniqueId().equals(player.getUniqueId())) continue;
+
+            try {
+                ServerPlayer viewerNms = ((CraftPlayer) viewer).getHandle();
+                trackedTransferredEntity.serverEntity.removePairing(viewerNms);
+            } catch (Throwable ignored) {
+            }
+        }
     }
 
     @EventHandler
